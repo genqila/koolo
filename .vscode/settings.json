@@ -1,0 +1,25 @@
+{
+    "go.formatTool": "default",
+    "json.format.keepLines": true,
+    "[css]": {
+        "editor.formatOnSave": true,
+    },
+    "[go]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "always"
+        }
+    },
+    "[javascript]": {
+        "editor.formatOnSave": true,
+    },
+    "[json]": {
+        "editor.formatOnSave": true,
+    },
+    "[jsonc]": {
+        "editor.formatOnSave": true,
+    },
+    "[yaml]": {
+        "editor.formatOnSave": true,
+    }
+}
