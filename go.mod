@@ -24,4 +24,4 @@ require (
 	golang.org/x/crypto v0.31.0 // indirect
 )
 
-replace github.com/hectorgimenez/d2go => github.com/kwader2k/d2go v0.0.0-20251228080657-d31193099721
+replace github.com/hectorgimenez/d2go => github.com/genqila/d2go v0.0.0-20251228150942-3e354eb79445
