@@ -12,6 +12,7 @@ import (
 	"github.com/hectorgimenez/d2go/pkg/data/object"
 	"github.com/hectorgimenez/d2go/pkg/data/quest"
 	"github.com/hectorgimenez/d2go/pkg/data/skill"
+	"github.com/hectorgimenez/d2go/pkg/data/state"
 	"github.com/hectorgimenez/koolo/internal/action"
 	"github.com/hectorgimenez/koolo/internal/action/step"
 	"github.com/hectorgimenez/koolo/internal/config"
@@ -19,10 +20,12 @@ import (
 	"github.com/hectorgimenez/koolo/internal/utils"
 )
 
-var baalThronePosition = data.Position{
-	X: 15095,
-	Y: 5042,
-}
+// Positions adapted from kolbot baal.js
+var baalThroneMainPos = data.Position{X: 15095, Y: 5042}
+var blizzPos = data.Position{X: 15094, Y: 5027}
+var hammerPos = data.Position{X: 15094, Y: 5029}
+var throneCenter = data.Position{X: 15093, Y: 5029}
+var forwardPos = data.Position{X: 15116, Y: 5026}
 
 type Baal struct {
 	ctx                *context.Status
@@ -88,7 +91,7 @@ func (s *Baal) Run(parameters *RunParameters) error {
 	if err != nil {
 		return err
 	}
-	err = action.MoveToCoords(baalThronePosition)
+	err = action.MoveToCoords(baalThroneMainPos)
 	if err != nil {
 		return err
 	}
@@ -114,7 +117,7 @@ func (s *Baal) Run(parameters *RunParameters) error {
 	action.Buff()
 
 	// Come back to previous position
-	err = action.MoveToCoords(baalThronePosition)
+	err = action.MoveToCoords(baalThroneMainPos)
 	if err != nil {
 		return err
 	}
@@ -138,7 +141,6 @@ func (s *Baal) Run(parameters *RunParameters) error {
 				lastWaveDetected = true
 			}
 		} else if lastWaveDetected {
-
 			if !s.ctx.CharacterCfg.Game.Baal.KillBaal && !isLevelingChar {
 				s.ctx.Logger.Info("Waves cleared, skipping Baal kill (Fast Exit).")
 				return nil
@@ -155,8 +157,14 @@ func (s *Baal) Run(parameters *RunParameters) error {
 		}
 
 		if !isWaitingForPortal {
-			action.ClearAreaAroundPosition(baalThronePosition, 50, data.MonsterAnyFilter())
-			action.MoveToCoords(baalThronePosition)
+			action.ClearAreaAroundPosition(baalThroneMainPos, 50, data.MonsterAnyFilter())
+			if s.ctx.Data.PlayerUnit.Skills[skill.BlessedHammer].Level > 1 {
+				// Hammerdin should preAttack from monster spawn area
+				action.MoveToCoords(hammerPos)
+			} else {
+				action.MoveToCoords(baalThroneMainPos)
+			}
+
 			s.preAttackBaalWaves()
 		}
 
@@ -247,79 +255,96 @@ func (s Baal) checkForSoulsOrDolls() bool {
 }
 
 func (s *Baal) preAttackBaalWaves() {
-	// Positions adapted from kolbot baal.js preattack
-	blizzPos := data.Position{X: 15094, Y: 5027}
-	hammerPos := data.Position{X: 15094, Y: 5029}
-	throneCenter := data.Position{X: 15093, Y: 5029}
-	forwardPos := data.Position{X: 15116, Y: 5026}
-
 	// Simple global cooldown between preattacks to avoid spam
-	const preAtkCooldown = 1500 * time.Millisecond
+	const preAtkCooldown = 300 * time.Millisecond
 	if !s.preAtkLast.IsZero() && time.Since(s.preAtkLast) < preAtkCooldown {
 		return
 	}
 
+	// Sorceress
 	if s.ctx.Data.PlayerUnit.Skills[skill.Blizzard].Level > 0 {
-		step.CastAtPosition(skill.Blizzard, true, blizzPos)
+		step.CastAtPosition(skill.Blizzard, false, true, blizzPos)
 		s.preAtkLast = time.Now()
 		return
 	}
 
 	if s.ctx.Data.PlayerUnit.Skills[skill.Meteor].Level > 0 {
-		step.CastAtPosition(skill.Meteor, true, blizzPos)
+		step.CastAtPosition(skill.Meteor, false, true, blizzPos)
 		s.preAtkLast = time.Now()
 		return
 	}
 	if s.ctx.Data.PlayerUnit.Skills[skill.FrozenOrb].Level > 0 {
-		step.CastAtPosition(skill.FrozenOrb, true, blizzPos)
+		step.CastAtPosition(skill.FrozenOrb, false, true, blizzPos)
 		s.preAtkLast = time.Now()
 		return
 	}
 
-	if s.ctx.Data.PlayerUnit.Skills[skill.BlessedHammer].Level > 0 {
+	// Paladin
+	if s.ctx.Data.PlayerUnit.Skills[skill.BlessedHammer].Level > 1 {
 		if kb, found := s.ctx.Data.KeyBindings.KeyBindingForSkill(skill.Concentration); found {
 			s.ctx.HID.PressKeyBinding(kb)
 		}
-		step.CastAtPosition(skill.BlessedHammer, true, hammerPos)
+		step.CastAtPosition(skill.BlessedHammer, true, true, hammerPos)
+		s.preAtkLast = time.Now()
+		if !s.ctx.Data.PlayerUnit.States.HasState(state.Meditation) {
+			if kb, found := s.ctx.Data.KeyBindings.KeyBindingForSkill(skill.Meditation); found {
+				s.ctx.HID.PressKeyBinding(kb)
+			}
+		} else if !s.ctx.Data.PlayerUnit.States.HasState(state.Cleansing) {
+			if kb, found := s.ctx.Data.KeyBindings.KeyBindingForSkill(skill.Cleansing); found {
+				s.ctx.HID.PressKeyBinding(kb)
+			}
+		}
+		return
+	}
+	if s.ctx.Data.PlayerUnit.Skills[skill.HolyBolt].Level > 1 {
+		if !s.ctx.Data.PlayerUnit.States.HasState(state.Cleansing) {
+			if kb, found := s.ctx.Data.KeyBindings.KeyBindingForSkill(skill.Cleansing); found {
+				s.ctx.HID.PressKeyBinding(kb)
+			}
+		}
+		step.CastAtPosition(skill.HolyBolt, true, true, hammerPos)
 		s.preAtkLast = time.Now()
 		return
 	}
 
+	// Amazon
 	if s.ctx.Data.PlayerUnit.Skills[skill.Decoy].Level > 0 {
 		const decoyCooldown = 10 * time.Second
 		if s.decoyLast.IsZero() || time.Since(s.decoyLast) > decoyCooldown {
 			decoyPos := data.Position{X: 15092, Y: 5028}
-			step.CastAtPosition(skill.Decoy, false, decoyPos)
+			step.CastAtPosition(skill.Decoy, false, false, decoyPos)
 			s.decoyLast = time.Now()
 			s.preAtkLast = time.Now()
 			return
 		}
 	}
 
+	// Necromancer
 	if s.ctx.Data.PlayerUnit.Skills[skill.PoisonNova].Level > 0 {
-		step.CastAtPosition(skill.PoisonNova, true, s.ctx.Data.PlayerUnit.Position)
+		step.CastAtPosition(skill.PoisonNova, false, true, s.ctx.Data.PlayerUnit.Position)
 		s.preAtkLast = time.Now()
 		return
 	}
 	if s.ctx.Data.PlayerUnit.Skills[skill.DimVision].Level > 0 {
-		step.CastAtPosition(skill.DimVision, true, blizzPos)
+		step.CastAtPosition(skill.DimVision, false, true, blizzPos)
 		s.preAtkLast = time.Now()
 		return
 	}
 
 	// Druid:
 	if s.ctx.Data.PlayerUnit.Skills[skill.Tornado].Level > 0 {
-		step.CastAtPosition(skill.Tornado, true, throneCenter)
+		step.CastAtPosition(skill.Tornado, false, true, throneCenter)
 		s.preAtkLast = time.Now()
 		return
 	}
 	if s.ctx.Data.PlayerUnit.Skills[skill.Fissure].Level > 0 {
-		step.CastAtPosition(skill.Fissure, true, forwardPos)
+		step.CastAtPosition(skill.Fissure, false, true, forwardPos)
 		s.preAtkLast = time.Now()
 		return
 	}
 	if s.ctx.Data.PlayerUnit.Skills[skill.Volcano].Level > 0 {
-		step.CastAtPosition(skill.Volcano, true, forwardPos)
+		step.CastAtPosition(skill.Volcano, false, true, forwardPos)
 		s.preAtkLast = time.Now()
 		return
 	}
@@ -327,7 +352,7 @@ func (s *Baal) preAttackBaalWaves() {
 	// Assassin:
 	if s.ctx.Data.PlayerUnit.Skills[skill.LightningSentry].Level > 0 {
 		for i := 0; i < 3; i++ {
-			step.CastAtPosition(skill.LightningSentry, true, throneCenter)
+			step.CastAtPosition(skill.LightningSentry, false, true, throneCenter)
 			utils.Sleep(80)
 		}
 		s.preAtkLast = time.Now()
@@ -335,14 +360,14 @@ func (s *Baal) preAttackBaalWaves() {
 	}
 	if s.ctx.Data.PlayerUnit.Skills[skill.DeathSentry].Level > 0 {
 		for i := 0; i < 2; i++ {
-			step.CastAtPosition(skill.DeathSentry, true, throneCenter)
+			step.CastAtPosition(skill.DeathSentry, false, true, throneCenter)
 			utils.Sleep(80)
 		}
 		s.preAtkLast = time.Now()
 		return
 	}
 	if s.ctx.Data.PlayerUnit.Skills[skill.ShockWeb].Level > 0 {
-		step.CastAtPosition(skill.ShockWeb, true, throneCenter)
+		step.CastAtPosition(skill.ShockWeb, false, true, throneCenter)
 		s.preAtkLast = time.Now()
 		return
 	}

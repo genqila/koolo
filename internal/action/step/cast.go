@@ -9,10 +9,10 @@ import (
 	"github.com/hectorgimenez/koolo/internal/game"
 )
 
-// CastAtPosition sets the right skill and casts it at a given game position using right-click.
+// CastAtPosition sets the left/right skill and casts it at a given game position using left/right-click.
 // Optionally holds stand-still to prevent movement while casting.
 // This is useful for pre-casting AoE skills (e.g., Blizzard, Blessed Hammer) between Baal waves.
-func CastAtPosition(sk skill.ID, standStill bool, pos data.Position) {
+func CastAtPosition(sk skill.ID, leftSkill bool, standStill bool, pos data.Position) {
 	ctx := context.Get()
 	ctx.SetLastStep("CastAtPosition")
 
@@ -23,7 +23,7 @@ func CastAtPosition(sk skill.ID, standStill bool, pos data.Position) {
 
 	// Set right skill if needed
 	if kb, found := ctx.Data.KeyBindings.KeyBindingForSkill(sk); found {
-		if ctx.Data.PlayerUnit.RightSkill != sk {
+		if (leftSkill && ctx.Data.PlayerUnit.LeftSkill != sk) || (!leftSkill && ctx.Data.PlayerUnit.RightSkill != sk) {
 			ctx.HID.PressKeyBinding(kb)
 			time.Sleep(10 * time.Millisecond)
 		}
@@ -38,5 +38,10 @@ func CastAtPosition(sk skill.ID, standStill bool, pos data.Position) {
 	}
 
 	x, y := ctx.PathFinder.GameCoordsToScreenCords(pos.X, pos.Y)
-	ctx.HID.Click(game.RightButton, x, y)
+	if leftSkill {
+		ctx.HID.Click(game.LeftButton, x, y)
+	} else {
+		ctx.HID.Click(game.RightButton, x, y)
+	}
+	ctx.LastCastAt = time.Now()
 }

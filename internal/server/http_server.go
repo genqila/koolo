@@ -1802,12 +1802,8 @@ func (s *HttpServer) updateConfigFromForm(values url.Values, cfg *config.Charact
 }
 
 func (s *HttpServer) updateClassSpecificConfig(values url.Values, cfg *config.CharacterCfg) {
-	// Smiter specific options
-	if cfg.Character.Class == "smiter" {
-		cfg.Character.Smiter.UberMephAura = values.Get("smiterUberMephAura")
-		if cfg.Character.Smiter.UberMephAura == "" {
-			cfg.Character.Smiter.UberMephAura = "resist_lightning"
-		}
+	if isPaladinClass(cfg.Character.Class) {
+		applyPaladinAuraOptions(values, cfg)
 	}
 
 	// Berserker Barb specific options
@@ -2000,8 +1996,9 @@ func (s *HttpServer) updateClassSpecificConfig(values url.Values, cfg *config.Ch
 	}
 
 	// Paladin Leveling specific options
-	if cfg.Character.Class == "paladin" {
+	if cfg.Character.Class == "paladin_leveling" {
 		cfg.Character.PaladinLeveling.UsePacketLearning = values.Has("usePacketLearning")
+		cfg.Character.PaladinLeveling.LevelingBuild = values.Get("paladinLevelingBuild")
 	}
 
 	// Nova Sorceress specific options (Extra)
@@ -2019,6 +2016,65 @@ func (s *HttpServer) updateClassSpecificConfig(values url.Values, cfg *config.Ch
 
 	// Fireball Sorceress specific options
 	if cfg.Character.Class == "fireballsorc" {
+	}
+}
+
+func applyPaladinAuraOptions(values url.Values, cfg *config.CharacterCfg) {
+	defaults := paladinAuraDefaultsForBuild(cfg.Character.Class)
+	cfg.Character.Paladin.MovementAura = paladinAuraValue(values, "paladinMovementAura", defaults.MovementAura)
+	cfg.Character.Paladin.HammerAura = paladinAuraValue(values, "paladinHammerAura", defaults.HammerAura)
+	cfg.Character.Paladin.SmiteAura = paladinAuraValue(values, "paladinSmiteAura", defaults.SmiteAura)
+	cfg.Character.Paladin.UberMephAura = paladinAuraValue(values, "paladinUberMephAura", defaults.UberMephAura)
+	cfg.Character.Paladin.FohAura = paladinAuraValue(values, "paladinFohAura", defaults.FohAura)
+	cfg.Character.Paladin.HolyBoltAura = paladinAuraValue(values, "paladinHolyBoltAura", defaults.HolyBoltAura)
+	cfg.Character.Paladin.ZealAura = paladinAuraValue(values, "paladinZealAura", defaults.ZealAura)
+	cfg.Character.Paladin.UseRedemptionOnRaisers = values.Has("paladinUseRedemptionOnRaisers")
+	cfg.Character.Paladin.UseRedemptionToReplenish = values.Has("paladinUseRedemptionToReplenish")
+}
+
+type paladinAuraDefaults struct {
+	MovementAura string
+	HammerAura   string
+	SmiteAura    string
+	FohAura      string
+	HolyBoltAura string
+	ZealAura     string
+	UberMephAura string
+}
+
+func paladinAuraDefaultsForBuild(build string) paladinAuraDefaults {
+	defaults := paladinAuraDefaults{
+		MovementAura: "vigor",
+		HammerAura:   "concentration",
+		SmiteAura:    "fanaticism",
+		FohAura:      "conviction",
+		HolyBoltAura: "cleansing",
+		ZealAura:     "fanaticism",
+		UberMephAura: "resist_lightning",
+	}
+	if strings.EqualFold(build, "paladin_dragon") {
+		defaults.MovementAura = "holy_fire"
+		defaults.ZealAura = "holy_fire"
+	}
+	return defaults
+}
+
+func paladinAuraValue(values url.Values, fieldName, fallback string) string {
+	value := strings.TrimSpace(values.Get(fieldName))
+	switch strings.ToLower(value) {
+	case "", "auto", "none":
+		return fallback
+	default:
+		return value
+	}
+}
+
+func isPaladinClass(class string) bool {
+	switch strings.ToLower(class) {
+	case "paladin_leveling", "paladin_default", "paladin_dragon":
+		return true
+	default:
+		return false
 	}
 }
 
@@ -2205,12 +2261,8 @@ func (s *HttpServer) characterSettings(w http.ResponseWriter, r *http.Request) {
 			cfg.Character.ClearPathDist = 7
 		}
 
-		// Smiter specific options
-		if cfg.Character.Class == "smiter" {
-			cfg.Character.Smiter.UberMephAura = r.Form.Get("smiterUberMephAura")
-			if cfg.Character.Smiter.UberMephAura == "" {
-				cfg.Character.Smiter.UberMephAura = "resist_lightning"
-			}
+		if isPaladinClass(cfg.Character.Class) {
+			applyPaladinAuraOptions(r.Form, cfg)
 		}
 
 		// Berserker Barb specific options
@@ -2407,8 +2459,9 @@ func (s *HttpServer) characterSettings(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Paladin Leveling specific options
-		if cfg.Character.Class == "paladin" {
+		if cfg.Character.Class == "paladin_leveling" {
 			cfg.Character.PaladinLeveling.UsePacketLearning = r.Form.Has("usePacketLearning")
+			cfg.Character.PaladinLeveling.LevelingBuild = r.Form.Get("paladinLevelingBuild")
 		}
 
 		// Nova Sorceress specific options

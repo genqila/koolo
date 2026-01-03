@@ -62,7 +62,7 @@ window.onload = function () {
     const buildSelectElement = document.querySelector('select[name="characterClass"]');
     buildSelectElement.addEventListener('change', function () {
         const selectedBuild = buildSelectElement.value;
-        const levelingBuilds = ['paladin', 'sorceress_leveling', 'druid_leveling', 'amazon_leveling', 'necromancer', 'assassin', 'barb_leveling'];
+        const levelingBuilds = ['paladin_leveling', 'sorceress_leveling', 'druid_leveling', 'amazon_leveling', 'necromancer', 'assassin', 'barb_leveling'];
 
         const enabledRunListElement = document.getElementById('enabled_runs');
         if (!enabledRunListElement) return;
@@ -278,7 +278,7 @@ function filterDisabledRuns(searchTerm) {
 function checkLevelingProfile() {
     const levelingProfiles = [
         "sorceress_leveling",
-        "paladin",
+        "paladin_leveling",
         "druid_leveling",
         "amazon_leveling",
         "necromancer",
@@ -393,11 +393,9 @@ document.addEventListener('DOMContentLoaded', function () {
             { value: 'necromancer', label: 'Necromancer (Leveling)' },
         ],
         paladin: [
-            { value: 'paladin', label: 'Paladin (Leveling)' },
-            { value: 'hammerdin', label: 'Hammer Paladin' },
-            { value: 'foh', label: 'FOH Paladin' },
-            { value: 'dragondin', label: 'Dragondin' },
-            { value: 'smiter', label: 'Smiter (Ubers)' },
+            { value: 'paladin_leveling', label: 'Leveling' },
+            { value: 'paladin_default', label: 'Hammer / FoH / Smite' },
+            { value: 'paladin_dragon', label: 'Dragon' },
         ],
         sorceress: [
             { value: 'sorceress', label: 'Blizzard Sorceress' },
@@ -581,7 +579,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
-    function updateCharacterOptions() {
+    function updateCharacterOptions(shouldResetPaladinAuras) {
         const selectedClass = characterClassSelect.value;
         const noSettingsMessage = document.getElementById('no-settings-message');
         const berserkerBarbOptions = document.querySelector('.berserker-barb-options');
@@ -598,8 +596,51 @@ document.addEventListener('DOMContentLoaded', function () {
         const amazonLevelingOptions = document.querySelector('.amazon_leveling-options');
         const druidLevelingOptions = document.querySelector('.druid_leveling-options');
         const necromancerLevelingOptions = document.querySelector('.necromancer-options');
-        const paladinLevelingOptions = document.querySelector('.paladin-options');
-        const smiterOptions = document.querySelector('.smiter-options');
+        const paladinLevelingOptions = document.querySelector('.paladin-leveling-options');
+        const paladinAuraOptions = document.querySelector('.paladin-aura-options');
+        const paladinAuraMovement = document.querySelector('.paladin-aura-movement');
+        const paladinAuraHammerSmite = document.querySelector('.paladin-aura-hammer-smite');
+        const paladinAuraUber = document.querySelector('.paladin-aura-uber');
+        const paladinAuraFohHb = document.querySelector('.paladin-aura-foh-hb');
+        const paladinAuraZeal = document.querySelector('.paladin-aura-zeal');
+        const paladinAuraUtility = document.querySelector('.paladin-aura-utility');
+
+        function setPaladinAuraFieldsets(mode) {
+            const showDefault = mode === 'default';
+            const showDragon = mode === 'dragon';
+            if (paladinAuraMovement) paladinAuraMovement.style.display = (showDefault || showDragon) ? 'grid' : 'none';
+            if (paladinAuraZeal) paladinAuraZeal.style.display = showDragon ? 'grid' : 'none';
+            if (paladinAuraHammerSmite) paladinAuraHammerSmite.style.display = showDefault ? 'grid' : 'none';
+            if (paladinAuraUber) paladinAuraUber.style.display = showDefault ? 'grid' : 'none';
+            if (paladinAuraFohHb) paladinAuraFohHb.style.display = showDefault ? 'grid' : 'none';
+            if (paladinAuraUtility) paladinAuraUtility.style.display = (showDefault || showDragon) ? 'grid' : 'none';
+        }
+
+        const paladinAuraDefaults = {
+            paladinMovementAura: 'vigor',
+            paladinHammerAura: 'concentration',
+            paladinSmiteAura: 'fanaticism',
+            paladinFohAura: 'conviction',
+            paladinHolyBoltAura: 'cleansing',
+            paladinZealAura: 'fanaticism',
+            paladinUberMephAura: 'resist_lightning',
+        };
+
+        function setPaladinAuraValue(selectName, value) {
+            const select = document.querySelector(`select[name="${selectName}"]`);
+            if (select) {
+                select.value = value;
+            }
+        }
+
+        function applyPaladinBuildDefaults(build) {
+            const values = Object.assign({}, paladinAuraDefaults);
+            if (build === 'paladin_dragon') {
+                values.paladinMovementAura = 'holy_fire';
+                values.paladinZealAura = 'holy_fire';
+            }
+            Object.entries(values).forEach(([name, value]) => setPaladinAuraValue(name, value));
+        }
 
         // Hide all options first
         if (berserkerBarbOptions) berserkerBarbOptions.style.display = 'none';
@@ -620,8 +661,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (druidLevelingOptions) druidLevelingOptions.style.display = 'none';
         if (necromancerLevelingOptions) necromancerLevelingOptions.style.display = 'none';
         if (paladinLevelingOptions) paladinLevelingOptions.style.display = 'none';
-        if (smiterOptions) smiterOptions.style.display = 'none';
+        if (paladinAuraOptions) paladinAuraOptions.style.display = 'none';
         if (noSettingsMessage) noSettingsMessage.style.display = 'none';
+        setPaladinAuraFieldsets('none');
 
         // Show relevant options based on class
         if (selectedClass === 'berserker') {
@@ -653,10 +695,18 @@ document.addEventListener('DOMContentLoaded', function () {
             if (druidLevelingOptions) druidLevelingOptions.style.display = 'block';
         } else if (selectedClass === 'necromancer') {
             if (necromancerLevelingOptions) necromancerLevelingOptions.style.display = 'block';
-        } else if (selectedClass === 'paladin') {
+        } else if (selectedClass === 'paladin_leveling') {
             if (paladinLevelingOptions) paladinLevelingOptions.style.display = 'block';
-        } else if (selectedClass === 'smiter') {
-            if (smiterOptions) smiterOptions.style.display = 'block';
+            if (paladinAuraOptions) paladinAuraOptions.style.display = 'none';
+            if (shouldResetPaladinAuras) applyPaladinBuildDefaults(selectedClass);
+        } else if (selectedClass === 'paladin_default') {
+            if (paladinAuraOptions) paladinAuraOptions.style.display = 'block';
+            setPaladinAuraFieldsets('default');
+            if (shouldResetPaladinAuras) applyPaladinBuildDefaults(selectedClass);
+        } else if (selectedClass === 'paladin_dragon') {
+            if (paladinAuraOptions) paladinAuraOptions.style.display = 'block';
+            setPaladinAuraFieldsets('dragon');
+            if (shouldResetPaladinAuras) applyPaladinBuildDefaults(selectedClass);
         } else {
             if (noSettingsMessage) noSettingsMessage.style.display = 'block';
         }
@@ -770,12 +820,12 @@ document.addEventListener('DOMContentLoaded', function () {
         mainCharacterClassSelect.addEventListener('change', function () {
             const mainClass = mainCharacterClassSelect.value;
             populateBuildSelect(mainClass, '');
-            updateCharacterOptions();
+            updateCharacterOptions(false);
         });
     }
 
     if (characterClassSelect) {
-        characterClassSelect.addEventListener('change', updateCharacterOptions);
+        characterClassSelect.addEventListener('change', () => updateCharacterOptions(true));
     }
     document.getElementById('gameDifficulty').addEventListener('change', function () {
         if (characterClassSelect.value === 'nova' || characterClassSelect.value === 'lightsorc') {
@@ -783,8 +833,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    characterClassSelect.addEventListener('change', updateCharacterOptions);
-    updateCharacterOptions(); // Call this initially to set the correct state
+    updateCharacterOptions(false); // Call this initially to set the correct state
 
     // Set initial state
     toggleSchedulerVisibility();

@@ -66,7 +66,7 @@ func EnsureSkillPoints() error {
 		usePacketMode = ctx.CharacterCfg.Character.DruidLeveling.UsePacketLearning
 	case "necromancer":
 		usePacketMode = ctx.CharacterCfg.Character.NecromancerLeveling.UsePacketLearning
-	case "paladin":
+	case "paladin_leveling":
 		usePacketMode = ctx.CharacterCfg.Character.PaladinLeveling.UsePacketLearning
 	}
 

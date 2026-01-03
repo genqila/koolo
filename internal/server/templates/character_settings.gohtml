@@ -102,11 +102,9 @@
                         <option value="lightsorc" {{ if eq .Config.Character.Class "lightsorc" }}selected{{ end }}>Lightning Sorceress</option>
                         <option value="fireballsorc" {{ if eq .Config.Character.Class "fireballsorc" }}selected{{ end }}>Fireball Sorceress</option>
                         <option value="mule" {{ if eq .Config.Character.Class "mule" }}selected{{ end }}>Mule</option>
-                        <option value="hammerdin" {{ if eq .Config.Character.Class "hammerdin" }}selected{{ end }}>Hammer Paladin</option>
-                        <option value="foh" {{ if eq .Config.Character.Class "foh" }}selected{{ end }}>FOH Paladin</option>
-                        <option value="dragondin" {{ if eq .Config.Character.Class "dragondin" }}selected{{ end }}>Dragondin</option>
-                        <option value="smiter" {{ if eq .Config.Character.Class "smiter" }}selected{{ end }}>Smiter (Ubers)</option>
-                        <option value="paladin" {{ if eq .Config.Character.Class "paladin" }}selected{{ end }}>Paladin (Leveling)</option>
+                        <option value="paladin_default" {{ if eq .Config.Character.Class "paladin_default" }}selected{{ end }}>Hammer / FoH / Smite</option>
+                        <option value="paladin_dragon" {{ if eq .Config.Character.Class "paladin_dragon" }}selected{{ end }}>Dragon</option>
+                        <option value="paladin_leveling" {{ if eq .Config.Character.Class "paladin_leveling" }}selected{{ end }}>Leveling</option>
                         <option value="barb_leveling" {{ if eq .Config.Character.Class "barb_leveling" }}selected{{ end }}>Barbarian (Leveling)</option>
                         <option value="assassin" {{ if eq .Config.Character.Class "assassin" }}selected{{ end }}>Assassin (Leveling)</option>
                         <option value="necromancer" {{ if eq .Config.Character.Class "necromancer" }}selected{{ end }}>Necromancer (Leveling)</option>
@@ -317,18 +315,6 @@
                         </div>
                     </fieldset>
                 </div>
-                <div class="smiter-options" style="display: none;">
-                    <fieldset class="grid">
-                        <label>
-                            UberMeph Aura
-                            <select name="smiterUberMephAura" required>
-                                <option value="fanaticism" {{ if eq .Config.Character.Smiter.UberMephAura "fanaticism" }}selected{{ end }}>Fanaticism</option>
-                                <option value="resist_lightning" {{ if or (eq .Config.Character.Smiter.UberMephAura "resist_lightning") (eq .Config.Character.Smiter.UberMephAura "") }}selected{{ end }}>Resist Lightning</option>
-                                <option value="salvation" {{ if eq .Config.Character.Smiter.UberMephAura "salvation" }}selected{{ end }}>Salvation</option>
-                            </select>
-                        </label>
-                    </fieldset>
-                </div>
 <div class="nova-sorceress-options" style="display: none;">
     <fieldset class="grid">
         <label>
@@ -447,11 +433,126 @@
                         </label>
                     </fieldset>
                 </div>
-                <div class="paladin-options" style="display: none;">
+                <div class="paladin-leveling-options" style="display: none;">
                     <fieldset class="grid">
+                        <label>
+                            Leveling Build
+                            <select name="paladinLevelingBuild">
+                                <option value="hammer" {{ if or (eq .Config.Character.PaladinLeveling.LevelingBuild "") (eq .Config.Character.PaladinLeveling.LevelingBuild "hammer") }}selected{{ end }}>Hammer</option>
+                                <option value="foh" {{ if eq .Config.Character.PaladinLeveling.LevelingBuild "foh" }}selected{{ end }}>FoH / Smite</option>
+                            </select>
+                        </label>
                         <label>
                             <input type="checkbox" name="usePacketLearning" {{ if .Config.Character.PaladinLeveling.UsePacketLearning }}checked{{ end }}/>
                             Use Packet Learning (faster skill/stat allocation)
+                        </label>
+                    </fieldset>
+                </div>
+                <div class="paladin-aura-options" style="display: none;">
+                    <fieldset class="grid paladin-aura-movement">
+                        <label>
+                            Movement Aura
+                            <select name="paladinMovementAura">
+                                {{ if eq .Config.Character.Class "paladin_dragon" }}
+                                    {{ if or (eq .Config.Character.Paladin.MovementAura "") (eq .Config.Character.Paladin.MovementAura "auto") (eq .Config.Character.Paladin.MovementAura "none") }}
+                                        {{ template "paladinAuraOptions" "conviction" }}
+                                    {{ else }}
+                                        {{ template "paladinAuraOptions" .Config.Character.Paladin.MovementAura }}
+                                    {{ end }}
+                                {{ else }}
+                                    {{ if or (eq .Config.Character.Paladin.MovementAura "") (eq .Config.Character.Paladin.MovementAura "auto") (eq .Config.Character.Paladin.MovementAura "none") }}
+                                        {{ template "paladinAuraOptions" "vigor" }}
+                                    {{ else }}
+                                        {{ template "paladinAuraOptions" .Config.Character.Paladin.MovementAura }}
+                                    {{ end }}
+                                {{ end }}
+                            </select>
+                        </label>
+                    </fieldset>
+                    <fieldset class="grid paladin-aura-hammer-smite">
+                        <label>
+                            Hammer Aura
+                            <select name="paladinHammerAura">
+                                {{ if or (eq .Config.Character.Paladin.HammerAura "") (eq .Config.Character.Paladin.HammerAura "auto") (eq .Config.Character.Paladin.HammerAura "none") }}
+                                    {{ template "paladinAuraOptions" "concentration" }}
+                                {{ else }}
+                                    {{ template "paladinAuraOptions" .Config.Character.Paladin.HammerAura }}
+                                {{ end }}
+                            </select>
+                        </label>
+                        <label>
+                            Smite Aura
+                            <select name="paladinSmiteAura">
+                                {{ if or (eq .Config.Character.Paladin.SmiteAura "") (eq .Config.Character.Paladin.SmiteAura "auto") (eq .Config.Character.Paladin.SmiteAura "none") }}
+                                    {{ template "paladinAuraOptions" "fanaticism" }}
+                                {{ else }}
+                                    {{ template "paladinAuraOptions" .Config.Character.Paladin.SmiteAura }}
+                                {{ end }}
+                            </select>
+                        </label>
+                    </fieldset>
+                    <fieldset class="grid paladin-aura-uber">
+                        <label>
+                            Uber Meph Aura
+                            <select name="paladinUberMephAura">
+                                {{ if or (eq .Config.Character.Paladin.UberMephAura "") (eq .Config.Character.Paladin.UberMephAura "auto") (eq .Config.Character.Paladin.UberMephAura "none") }}
+                                    {{ template "paladinAuraOptions" "resist_lightning" }}
+                                {{ else }}
+                                    {{ template "paladinAuraOptions" .Config.Character.Paladin.UberMephAura }}
+                                {{ end }}
+                            </select>
+                        </label>
+                    </fieldset>
+                    <fieldset class="grid paladin-aura-foh-hb">
+                        <label>
+                            FoH Aura
+                            <select name="paladinFohAura">
+                                {{ if or (eq .Config.Character.Paladin.FohAura "") (eq .Config.Character.Paladin.FohAura "auto") (eq .Config.Character.Paladin.FohAura "none") }}
+                                    {{ template "paladinAuraOptions" "conviction" }}
+                                {{ else }}
+                                    {{ template "paladinAuraOptions" .Config.Character.Paladin.FohAura }}
+                                {{ end }}
+                            </select>
+                        </label>
+                        <label>
+                            Holy Bolt Aura
+                            <select name="paladinHolyBoltAura">
+                                {{ if or (eq .Config.Character.Paladin.HolyBoltAura "") (eq .Config.Character.Paladin.HolyBoltAura "auto") (eq .Config.Character.Paladin.HolyBoltAura "none") }}
+                                    {{ template "paladinAuraOptions" "cleansing" }}
+                                {{ else }}
+                                    {{ template "paladinAuraOptions" .Config.Character.Paladin.HolyBoltAura }}
+                                {{ end }}
+                            </select>
+                        </label>
+                    </fieldset>
+                    <fieldset class="grid paladin-aura-zeal">
+                        <label>
+                            Zeal Aura
+                            <select name="paladinZealAura">
+                                {{ if eq .Config.Character.Class "paladin_dragon" }}
+                                    {{ if or (eq .Config.Character.Paladin.ZealAura "") (eq .Config.Character.Paladin.ZealAura "auto") (eq .Config.Character.Paladin.ZealAura "none") }}
+                                        {{ template "paladinAuraOptions" "conviction" }}
+                                    {{ else }}
+                                        {{ template "paladinAuraOptions" .Config.Character.Paladin.ZealAura }}
+                                    {{ end }}
+                                {{ else }}
+                                    {{ if or (eq .Config.Character.Paladin.ZealAura "") (eq .Config.Character.Paladin.ZealAura "auto") (eq .Config.Character.Paladin.ZealAura "none") }}
+                                        {{ template "paladinAuraOptions" "fanaticism" }}
+                                    {{ else }}
+                                        {{ template "paladinAuraOptions" .Config.Character.Paladin.ZealAura }}
+                                    {{ end }}
+                                {{ end }}
+                            </select>
+                        </label>
+                    </fieldset>
+                    <fieldset class="grid paladin-aura-utility">
+                        <label>
+                            <input type="checkbox" name="paladinUseRedemptionOnRaisers" {{ if .Config.Character.Paladin.UseRedemptionOnRaisers }}checked{{ end }}/>
+                            Use Redemption when raisers are nearby
+                        </label>
+                        <label>
+                            <input type="checkbox" name="paladinUseRedemptionToReplenish" {{ if .Config.Character.Paladin.UseRedemptionToReplenish }}checked{{ end }}/>
+                            Use Redemption when under 50% Life or 50% Mana to replenish them
                         </label>
                     </fieldset>
                 </div>
@@ -1344,3 +1445,26 @@ function validateCharacterName(input) {
 </script>
 </body>
 </html>
+
+{{ define "paladinAuraOptions" }}
+    <option value="blessed_aim" {{ if eq . "blessed_aim" }}selected{{ end }}>Blessed Aim</option>
+    <option value="cleansing" {{ if eq . "cleansing" }}selected{{ end }}>Cleansing</option>
+    <option value="concentration" {{ if eq . "concentration" }}selected{{ end }}>Concentration</option>
+    <option value="conviction" {{ if eq . "conviction" }}selected{{ end }}>Conviction</option>
+    <option value="defiance" {{ if eq . "defiance" }}selected{{ end }}>Defiance</option>
+    <option value="fanaticism" {{ if eq . "fanaticism" }}selected{{ end }}>Fanaticism</option>
+    <option value="holy_fire" {{ if eq . "holy_fire" }}selected{{ end }}>Holy Fire</option>
+    <option value="holy_freeze" {{ if eq . "holy_freeze" }}selected{{ end }}>Holy Freeze</option>
+    <option value="holy_shock" {{ if eq . "holy_shock" }}selected{{ end }}>Holy Shock</option>
+    <option value="meditation" {{ if eq . "meditation" }}selected{{ end }}>Meditation</option>
+    <option value="might" {{ if eq . "might" }}selected{{ end }}>Might</option>
+    <option value="prayer" {{ if eq . "prayer" }}selected{{ end }}>Prayer</option>
+    <option value="redemption" {{ if eq . "redemption" }}selected{{ end }}>Redemption</option>
+    <option value="resist_cold" {{ if eq . "resist_cold" }}selected{{ end }}>Resist Cold</option>
+    <option value="resist_fire" {{ if eq . "resist_fire" }}selected{{ end }}>Resist Fire</option>
+    <option value="resist_lightning" {{ if eq . "resist_lightning" }}selected{{ end }}>Resist Lightning</option>
+    <option value="salvation" {{ if eq . "salvation" }}selected{{ end }}>Salvation</option>
+    <option value="sanctuary" {{ if eq . "sanctuary" }}selected{{ end }}>Sanctuary</option>
+    <option value="thorns" {{ if eq . "thorns" }}selected{{ end }}>Thorns</option>
+    <option value="vigor" {{ if eq . "vigor" }}selected{{ end }}>Vigor</option>
+{{ end }}

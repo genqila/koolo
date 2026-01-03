@@ -324,6 +324,8 @@ func performAttack(ctx *context.Status, settings attackSettings, targetID data.U
 			ctx.Logger.Warn("Failed to cast Blizzard via packet, falling back to mouse", "error", err)
 			// Fall back to regular mouse casting
 			performMouseAttack(ctx, settings, x, y)
+		} else {
+			ctx.LastCastAt = time.Now()
 		}
 		return
 	}
@@ -342,6 +344,7 @@ func performAttack(ctx *context.Status, settings attackSettings, targetID data.U
 				ctx.Logger.Warn("Failed to cast entity skill via packet (left), falling back to mouse", "error", err)
 				performMouseAttack(ctx, settings, x, y)
 			} else {
+				ctx.LastCastAt = time.Now()
 				// Respect cast duration to avoid spamming server
 				time.Sleep(ctx.Data.PlayerCastDuration())
 			}
@@ -356,6 +359,7 @@ func performAttack(ctx *context.Status, settings attackSettings, targetID data.U
 				ctx.Logger.Warn("Failed to cast entity skill via packet (right), falling back to mouse", "error", err)
 				performMouseAttack(ctx, settings, x, y)
 			} else {
+				ctx.LastCastAt = time.Now()
 				// Respect cast duration to avoid spamming server
 				time.Sleep(ctx.Data.PlayerCastDuration())
 			}
@@ -384,6 +388,7 @@ func performMouseAttack(ctx *context.Status, settings attackSettings, x, y int) 
 	} else {
 		ctx.HID.Click(game.RightButton, x, y)
 	}
+	ctx.LastCastAt = time.Now()
 
 	if settings.shouldStandStill {
 		ctx.HID.KeyUp(ctx.Data.KeyBindings.StandStill)

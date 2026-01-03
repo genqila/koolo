@@ -309,11 +309,20 @@ type CharacterCfg struct {
 			UsePacketLearning bool `yaml:"use_packet_learning"`
 		} `yaml:"necromancer_leveling"`
 		PaladinLeveling struct {
-			UsePacketLearning bool `yaml:"use_packet_learning"`
+			UsePacketLearning bool   `yaml:"use_packet_learning"`
+			LevelingBuild     string `yaml:"leveling_build"`
 		} `yaml:"paladin_leveling"`
-		Smiter struct {
-			UberMephAura string `yaml:"uber_meph_aura"`
-		} `yaml:"smiter"`
+		Paladin struct {
+			MovementAura             string `yaml:"movement_aura"`
+			HammerAura               string `yaml:"hammer_aura"`
+			SmiteAura                string `yaml:"smite_aura"`
+			FohAura                  string `yaml:"foh_aura"`
+			HolyBoltAura             string `yaml:"holy_bolt_aura"`
+			ZealAura                 string `yaml:"zeal_aura"`
+			UberMephAura             string `yaml:"uber_meph_aura"`
+			UseRedemptionOnRaisers   bool   `yaml:"use_redemption_on_raisers"`
+			UseRedemptionToReplenish bool   `yaml:"use_redemption_to_replenish"`
+		} `yaml:"paladin"`
 		WarcryBarb struct {
 			FindItemSwitch              bool `yaml:"find_item_switch"`
 			SkipPotionPickupInTravincal bool `yaml:"skip_potion_pickup_in_travincal"`
@@ -612,7 +621,6 @@ func Load() error {
 		_ = r.Close()
 
 		charCfg.ConfigFolderName = entry.Name()
-
 		if charCfg.Game.MaxFailedMenuAttempts == 0 {
 			charCfg.Game.MaxFailedMenuAttempts = 10
 		}
@@ -636,7 +644,7 @@ func Load() error {
 
 		// Load the leveling pickit rules
 
-		if len(charCfg.Game.Runs) > 0 && charCfg.Game.Runs[0] == "leveling" || charCfg.Game.Runs[0] == "leveling_sequence" {
+		if hasLevelingRun(charCfg.Game.Runs) {
 			nips := getLevelingNipFiles(&charCfg, entry.Name())
 
 			for _, nipFile := range nips {
@@ -804,6 +812,16 @@ func getAbsPath(relPath string) string {
 		return relPath
 	}
 	return filepath.Join(cwd, relPath)
+}
+
+func hasLevelingRun(runs []Run) bool {
+	for _, run := range runs {
+		runName := strings.ToLower(string(run))
+		if strings.Contains(runName, "leveling") || strings.Contains(runName, "leveling_sequence") {
+			return true
+		}
+	}
+	return false
 }
 
 func getLevelingNipFiles(charCfg *CharacterCfg, entryName string) []string {
