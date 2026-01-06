@@ -1,0 +1,509 @@
+{
+    "normal": {
+        "quests": [
+            {
+                "run": "den"
+            },
+            {
+                "run": "bloodraven"
+            },
+            {
+                "run": "rescue_cain"
+            },
+            {
+                "run": "countess",
+                "exitGame": true
+            },
+            {
+                "run": "andariel",
+                "minLevel": 14,
+                "stopIfCheckFails": true
+            },
+            {
+                "run": "radament",
+                "minLevel": 17,
+                "stopIfCheckFails": true
+            },
+            {
+                "run": "cube"
+            },
+            {
+                "run": "staff"
+            },
+            {
+                "run": "amulet"
+            },
+            {
+                "run": "summoner",
+                "exitGame": true
+            },
+            {
+                "run": "duriel",
+                "minLevel": 26,
+                "stopIfCheckFails": true
+            },
+            {
+                "run": "jade_figurine"
+            },
+            {
+                "run": "khalims_eye"
+            },
+            {
+                "run": "khalims_brain"
+            },
+            {
+                "run": "khalims_heart"
+            },
+            {
+                "run": "lam_esen",
+                "minLevel": 30,
+                "exitGame": true,
+                "stopIfCheckFails": true
+            },
+            {
+                "run": "travincal"
+            },
+            {
+                "run": "mephisto"
+            },
+            {
+                "run": "izual"
+            },
+            {
+                "run": "hellforge"
+            },
+            {
+                "run": "diablo",
+                "exitGame": true
+            },
+            {
+                "run": "shenk",
+                "minLevel": 37,
+                "stopIfCheckFails": true
+            },
+            {
+                "run": "rescue_barbs"
+            },
+            {
+                "run": "anya"
+            },
+            {
+                "run": "ancients"
+            },
+            {
+                "run": "baal",
+                "exitGame": true
+            }
+        ],
+        "beforeQuests": [
+            {
+                "run": "pindleskin"
+            },
+            {
+                "run": "travincal",
+                "minLevel": 37,
+                "lowGoldRun": true,
+                "exitGame": true
+            },
+            {
+                "run": "mephisto",
+                "minLevel": 30,
+                "lowGoldRun": true,
+                "exitGame": true
+            },
+            {
+                "run": "countess",
+                "lowGoldRun": true,
+                "exitGame": true
+            }
+        ],
+        "afterQuests": [
+            {
+                "run": "countess",
+                "maxLevel": 13,
+                "exitGame": true
+            },
+            {
+                "run": "bone_ash",
+                "minLevel": 14,
+                "maxLevel": 16
+            },
+            {
+                "run": "andariel",
+                "minLevel": 14,
+                "maxLevel": 16,
+                "exitGame": true
+            },
+            {
+                "run": "tal_rasha_tombs",
+                "maxLevel": 25,
+                "exitGame": true
+            },
+            {
+                "run": "kurast_temples",
+                "maxLevel": 29,
+                "exitGame": true
+            },
+            {
+                "run": "diablo",
+                "maxLevel": 36,
+                "exitGame": true
+            },
+            {
+                "run": "baal",
+                "exitGame": true
+            }
+        ],
+        "nextDifficultyConditions": {
+            "level": 40
+        },
+        "configSettings": [
+            {
+                "healthSettings": {
+                    "healingPotionAt": 45,
+                    "manaPotionAt": 25,
+                    "rejuvPotionAtLife": 0,
+                    "rejuvPotionAtMana": 0,
+                    "mercHealingPotionAt": 25,
+                    "mercRejuvPotionAt": 0,
+                    "chickenAt": 45,
+                    "townChickenAt": 0,
+                    "mercChickenAt": 0,
+                    "healingPotionCount": 7,
+                    "manaPotionCount": 0,
+                    "rejuvPotionCount": 0,
+                    "beltColumns": [
+                        "healing",
+                        "healing",
+                        "mana",
+                        "mana"
+                    ]
+                }
+            },
+            {
+                "level": 4,
+                "healthSettings": {
+                    "healingPotionAt": 90,
+                    "mercHealingPotionAt": 75
+                }
+            },
+            {
+                "level": 12,
+                "healthSettings": {
+                    "manaPotionCount": 4
+                }
+            },
+            {
+                "level": 13,
+                "healthSettings": {
+                    "manaPotionCount": 8
+                }
+            }
+        ]
+    },
+    "nightmare": {
+        "quests": [
+            {
+                "run": "den"
+            },
+            {
+                "run": "rescue_cain",
+                "minLevel": 51,
+                "exitGame": true
+            },
+            {
+                "run": "countess",
+                "exitGame": true
+            },
+            {
+                "run": "andariel",
+                "minLevel": 51,
+                "exitGame": true,
+                "stopIfCheckFails": true
+            },
+            {
+                "run": "radament",
+                "minLevel": 52,
+                "stopIfCheckFails": true
+            },
+            {
+                "run": "staff"
+            },
+            {
+                "run": "amulet"
+            },
+            {
+                "run": "summoner"
+            },
+            {
+                "run": "duriel"
+            },
+            {
+                "run": "jade_figurine"
+            },
+            {
+                "run": "khalims_eye"
+            },
+            {
+                "run": "khalims_brain"
+            },
+            {
+                "run": "khalims_heart"
+            },
+            {
+                "run": "lam_esen"
+            },
+            {
+                "run": "travincal"
+            },
+            {
+                "run": "mephisto"
+            },
+            {
+                "run": "izual"
+            },
+            {
+                "run": "hellforge"
+            },
+            {
+                "run": "diablo",
+                "exitGame": true
+            },
+            {
+                "run": "shenk",
+                "minLevel": 69,
+                "stopIfCheckFails": true
+            },
+            {
+                "run": "rescue_barbs"
+            },
+            {
+                "run": "anya"
+            },
+            {
+                "run": "ancients"
+            },
+            {
+                "run": "baal",
+                "exitGame": true
+            }
+        ],
+        "beforeQuests": [
+            {
+                "run": "pindleskin"
+            },
+            {
+                "run": "travincal",
+                "minLevel": 69,
+                "lowGoldRun": true,
+                "exitGame": true
+            },
+            {
+                "run": "mephisto",
+                "lowGoldRun": true,
+                "exitGame": true
+            },
+            {
+                "run": "countess",
+                "lowGoldRun": true,
+                "exitGame": true
+            }
+        ],
+        "afterQuests": [
+            {
+                "run": "countess",
+                "maxLevel": 50
+            },
+            {
+                "run": "bone_ash",
+                "maxLevel": 50,
+                "exitGame": true
+            },
+            {
+                "run": "andariel",
+                "minLevel": 51,
+                "maxLevel": 51,
+                "exitGame": true
+            },
+            {
+                "run": "diablo",
+                "maxLevel": 68,
+                "exitGame": true
+            },
+            {
+                "run": "baal",
+                "exitGame": true
+            }
+        ],
+        "nextDifficultyConditions": {
+            "level": 69
+        },
+        "stayDifficultyConditions": {
+            "level": 40
+        },
+        "configSettings": []
+    },
+    "hell": {
+        "quests": [
+            {
+                "run": "den"
+            },
+            {
+                "run": "rescue_cain",
+                "minLevel": 82,
+                "exitGame": true
+            },
+            {
+                "run": "countess",
+                "exitGame": true
+            },
+            {
+                "run": "andariel",
+                "minLevel": 82,
+                "exitGame": true,
+                "stopIfCheckFails": true
+            },
+            {
+                "run": "radament",
+                "minLevel": 90,
+                "stopIfCheckFails": true
+            },
+            {
+                "run": "staff"
+            },
+            {
+                "run": "amulet"
+            },
+            {
+                "run": "summoner"
+            },
+            {
+                "run": "duriel"
+            },
+            {
+                "run": "jade_figurine"
+            },
+            {
+                "run": "khalims_eye"
+            },
+            {
+                "run": "khalims_brain"
+            },
+            {
+                "run": "khalims_heart"
+            },
+            {
+                "run": "lam_esen"
+            },
+            {
+                "run": "travincal"
+            },
+            {
+                "run": "mephisto"
+            },
+            {
+                "run": "izual"
+            },
+            {
+                "run": "hellforge"
+            },
+            {
+                "run": "diablo",
+                "exitGame": true
+            },
+            {
+                "run": "shenk"
+            },
+            {
+                "run": "rescue_barbs"
+            },
+            {
+                "run": "anya"
+            },
+            {
+                "run": "ancients",
+                "minLevel": 92,
+                "stopIfCheckFails": true
+            },
+            {
+                "run": "baal"
+            }
+        ],
+        "beforeQuests": [
+            {
+                "run": "pindleskin"
+            },
+            {
+                "run": "pit",
+                "minLevel": 82,
+                "lowGoldRun": true,
+                "exitGame": true
+            },
+            {
+                "run": "countess",
+                "lowGoldRun": true,
+                "exitGame": true
+            },
+            {
+                "run": "diablo"
+            },
+            {
+                "run": "pit",
+                "minLevel": 82
+            }
+        ],
+        "afterQuests": [
+            {
+                "run": "countess",
+                "maxLevel": 85
+            },
+            {
+                "run": "bone_ash",
+                "maxLevel": 81,
+                "exitGame": true
+            },
+            {
+                "run": "andariel",
+                "minLevel": 82,
+                "maxLevel": 89,
+                "exitGame": true
+            }
+        ],
+        "stayDifficultyConditions": {
+            "level": 69
+        },
+        "configSettings": [
+            {
+                "level": 82,
+                "healthSettings": {
+                    "rejuvPotionAtLife": 65,
+                    "rejuvPotionAtMana": 1,
+                    "mercRejuvPotionAt": 30,
+                    "healingPotionCount": 7,
+                    "manaPotionCount": 4,
+                    "rejuvPotionCount": 4,
+                    "beltColumns": [
+                        "healing",
+                        "healing",
+                        "mana",
+                        "rejuvenation"
+                    ]
+                }
+            },
+            {
+                "level": 92,
+                "healthSettings": {
+                    "healingPotionCount": 2,
+                    "manaPotionCount": 2,
+                    "rejuvPotionCount": 7,
+                    "beltColumns": [
+                        "healing",
+                        "mana",
+                        "rejuvenation",
+                        "rejuvenation"
+                    ]
+                }
+            }
+        ]
+    }
+}

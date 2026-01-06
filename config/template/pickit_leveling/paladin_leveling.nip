@@ -1,0 +1,152 @@
+// IGNORED by default, this directory is ONLY evaluated DURING the character leveling process.
+// Rules here are included ADDITIONALLY to the main pickit rules
+
+// ## Potions ##
+[name] == minorhealingpotion     // Minor Healing Potion
+[name] == lighthealingpotion     // Light Healing Potion
+[name] == healingpotion          // Healing Potion
+[name] == greaterhealingpotion   // Greater Healing Potion
+[name] == superhealingpotion     // Super Healing Potion
+[name] == minormanapotion        // Minor Mana Potion
+[name] == lightmanapotion        // Light Mana Potion
+[name] == manapotion             // Mana Potion
+[name] == greatermanapotion      // Greater Mana Potion
+[name] == supermanapotion        // Super Mana Potion
+[name] == rejuvenationpotion     // Rejuvenation Potion
+[name] == fullrejuvenationpotion // Full Rejuvenation Potion
+
+// ## AutoEquip ##
+// Those are items we pickup with impossible mods in order for them to be checked for autoequip (or gold selling)
+[type] == smallcharm && [quality] >= magic # [itemallskills] >= 10
+[type] == largecharm && [quality] >= magic # [itemallskills] >= 10
+[type] == amulet && [quality] >= magic # [itemallskills] >= 10
+[type] == ring && [quality] >= magic # [itemallskills] >= 10
+[type] == belt && [quality] >= magic # [itemallskills] >= 10
+[type] == boots && [quality] >= rare # [itemallskills] >= 10
+[type] == gloves && [quality] >= rare # [itemallskills] >= 10
+
+// ## Weapons ##
+[name] == longsword && [flag] == runeword && [flag] != ethereal # [maxmana] >= 89 # [tier] == 10000    // Spirit longsword (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb; req [lvl: 25 | str: 55 | dex: 0])
+[name] == broadsword && [flag] == runeword && [flag] != ethereal # [maxmana] >= 89 # [tier] == 10100   // Spirit broadsword (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb; req [lvl: 25 | str: 48 | dex: 0])
+[name] == crystalsword && [flag] == runeword && [flag] != ethereal # [maxmana] >= 89 # [tier] == 10200 // Spirit crystal sword (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb; req [lvl: 25 | str: 43 | dex: 0])
+
+// ## Body Armor ##
+[type] == armor && [flag] != ethereal # [fcr] == 25 # [tier] == 15000                                                         // Stealth (25 fcr/25 frw/25 fhr/30 pr/6 dex/15 stamina/15% mana regen/3 mdr; req [lvl: 17+ | str: base | dex: base])
+[type] == armor && [class] == exceptional && [flag] != ethereal # [fireresist] == 50 && [lightresist] == 50 # [tier] == 25000 // Smoke (50@res/20 fhr/75 ed/250 def vs missile/+10 energy/-1 light radius; req [lvl: 37+ | str: base | dex: base])
+[type] == armor && [class] == elite && [flag] != ethereal # [fireresist] == 50 && [lightresist] == 50 # [tier] == 30000       // Smoke (50@res/20 fhr/75 ed/250 def vs missile/+10 energy/-1 light radius; req [lvl: 37+ | str: base | dex: base])
+[name] == serpentskinarmor && [quality] == unique # [fcr] == 30 # [tier] == 32000                                             // Skin of the Vipermagi (+1 skills/30 fcr/20-35@res/120 ed/9-13 mdr; req [lvl: 29 | str: 43 | dex: 0])
+[name] == russetarmor && [quality] == unique # [itemallskills] == 1 && [itemmagicbonus] >= 40 # [tier] == 34000               // Skullder's Ire (+1 skills/10% dmg to mana/1.25% mf per lvl; req [lvl: 42 | str: 97 | dex: 0])
+
+// ## Belts ##
+[name] == warbelt && [quality] == unique # [itemabsorblight] == 20 # [tier] == 6000                                           // Thundergod's Vigor (160-200% ed/1-50 ltng dmg/5% ctc lvl 7 FoH when struck/20 ltng absorb/10 max lr/20 str/20 vit/+3 Ltng Fury/+3 Ltng Strike; req [lvl: 47 | str: 110 | dex: 0])
+[name] == vampirefangbelt && [quality] == unique && [flag] != ethereal # [lifeleech] >= 5 && [defense] >= 56 # [tier] == 7000 // Nosferatu's Coil (10 ias/5-7% ll/10% slow/15 str/2 mana per kill/-3 light radius/56-63 def; req [lvl: 51 | str: 50 | dex: 0])
+[name] == demonhidesash && [quality] == unique && [flag] != ethereal # [lifeleech] >= 6 # [tier] == 8000                      // String of Ears (10-15% dr/10-15 mdr/6-8% ll/150-180 ed/15 def; req [lvl: 29 | str: 20 | dex: 0])
+[name] == mithrilcoil && [quality] == unique && [flag] != ethereal # [damageresist] >= 10 # [tier] == 9000                    // Verdungo's Hearty Cord (10 fhr/10-15% dr/10-13 repl life/30-40 vit/100-120 stamina/90-140 ed/58-65 def; req [lvl: 63 | str: 106 | dex: 0])
+[name] == spiderwebsash && [quality] == unique && [flag] != ethereal # [enhanceddefense] >= 90 # [tier] == 10000              // Arachnid Mesh (+1 skills/20 fcr/90-120 ed/5% mana/10% slow; req [lvl: 80 | str: 50 | dex: 0])
+
+// ## Gloves ##
+// no-op
+
+// ## Helms ##
+[type] == helm && [flag] == runeword && [flag] != ethereal # [sockets] == 2 && [strength] == 5 && [itemmanaafterkill] == 2 # [tier] == 9000  // Nadir (50 ed/10 def/5 str/2 mana per kill/-33 gf/lvl 13 cloak of shadows (9 charges); req [lvl: 13+ | str: base | dex: base])
+[name] == skullcap && [quality] == unique && [flag] != ethereal # [itemallskills] == 1 && [itemmagicbonus] >= 25 # [tier] == 10000           // Tarnhelm (+1 skills/25-50 mf/75 gf; req [lvl: 15 | str: 15 | dex: 0])
+[type] == helm && [flag] == runeword && [flag] != ethereal # [sockets] == 2 && [lightresist] >= 30 && [itemallskills] == 1 # [tier] == 11000 // Lore (+1 skills/30 lr/10 energy/2 mana per kill/2 light radius/7 dr; req [lvl: 27+ | str: base | dex: base])
+[name] == warhat && [quality] == unique && [flag] != ethereal # [enhanceddefense] >= 100 # [tier] == 12000                                   // Peasant Crown (+1 skills/20 energy/20 vit/15 frw/100 ed/6-12 repl life; req [lvl: 28 | str: 20 | dex: 0])
+[name] == sallet && [quality] == unique && [flag] != ethereal # [enhanceddefense] >= 160 # [tier] == 13000                                   // Rockstopper (10% dr/20-50 fr/20-40 cr/20-40 lr/30 fhr/15 vit/160-220 ed; req [lvl: 31 | str: 43 | dex: 0])
+[name] == corona && [quality] == unique # [damageresist] >= 10 # [tier] == 14000                                                             // Crown of Ages (50% ed/100-150 def/+1 skills/10-15% dr/20-30@res/30 fhr/1-2 sockets/indestructible; req [lvl: 82 | str: 174 | dex: 0])
+[name] == shako && [quality] == unique && [flag] != ethereal # [defense] >= 98 # [tier] == 15000                                             // Harlequin Crest (+2 skills/10% dr/50 mf/+2 all stats/life+mana per lvl; req [lvl: 62 | str: 50 | dex: 0])
+
+// ## Amulet ##
+[type] == amulet && [quality] == set # [itemallskills] == 1 && [coldresist] == 18 # [tier] == 8000                                    // Telling of Beads (set; 1 skills/18 cr/35-50 pr/8-10 attacker takes dmg; req [lvl: 30 | str: 0 | dex: 0])
+[type] == amulet && [quality] == unique # [lightresist] >= 35 # [tier] == 9000                                                        // Highlord's Wrath (+1 skills/20 ias/35 lr/1-30 ltng dmg/ds per lvl; req [lvl: 65 | str: 0 | dex: 0])
+[type] == amulet && [quality] == unique # [itemallskills] == 2 && [fireresist] + [lightresist] + [coldresist] >= 60 # [tier] == 10000 // Mara's Kaleidoscope (+2 skills/20-30@res/+5 all stats; req [lvl: 67 | str: 0 | dex: 0])
+
+// ## Rings ##
+[type] == ring && [quality] == unique # [poisonresist] >= 20 && [normaldamagereduction] >= 7  # [tier] == 6000 && [maxquantity] == 1 // Nature's Peace (20-30 pr/7-11 dr/pmh/rip; req [lvl: 69 | str: 0 | dex: 0])
+[type] == ring && [quality] == unique # [itemabsorblightpercent]+[itemmagicbonus] >= 20 # [tier] == 7000 && [maxquantity] == 1       // Wisp Projector (10-20 ltng absorb/10-20 mf; req [lvl: 76 | str: 0 | dex: 0])
+[type] == ring && [quality] == unique # [itemmaxmanapercent] >= 25 # [tier] == 8000                                                  // Stone of Jordan (+1 skills/25% mana/20 mana/1-12 ltng dmg; req [lvl: 29 | str: 0 | dex: 0])
+[type] == ring && [quality] == unique # [lifeleech] >= 3 && [maxstamina] == 50 # [tier] == 9000                                      // Bul-Kathos' Wedding Band (+1 skills/3-5% ll/50 stamina/life per lvl; req [lvl: 58 | str: 0 | dex: 0])
+[type] == ring && [quality] == unique # [magicdamagereduction] >= 12 # [tier] == 9500 && [maxquantity] == 1                          // Dwarf Star (12-15 mdr/15% fire absorb/40 life/100 gf/40 stamina/15 stamina regen; req [lvl: 45 | str: 0 | dex: 0])
+[type] == ring && [quality] == unique # [dexterity] >= 15 && [tohit] >= 150 # [tier] == 10000 && [maxquantity] == 1                  // Raven Frost (cbf/15-20 dex/150-250 ar/40 mana/15-45 cold dmg/20% cold absorb; req [lvl: 45 | str: 0 | dex: 0])
+
+// ## Boots ##
+[name] == boots && [quality] == unique && [flag] != ethereal # [fireresist] == 45 # [tier] == 6000            // Hotspur (45 fr/15 max fr/15 life/10-20 ed/6 def/3-6 fire dmg; req [lvl: 5 | str: 0 | dex: 0])
+[name] == demonhideboots && [quality] == unique && [flag] != ethereal # [fireresist] >= 30 # [tier] == 7000   // Infernostride (20 frw/30 fr/10 max fr/40-70 gf/12-33 fire dmg/120-150 ed/+2 light radius; req [lvl: 29 | str: 20 | dex: 0])
+[name] == battleboots && [quality] == set # [fireresist] >= 40 # [tier] == 8000                               // Aldur's Advance (set; 40 frw/40-50 fr/50 life/10% dmg to mana/32% stamina regen/indestructible; req [lvl: 45 | str: 95 | dex: 0])
+[name] == scarabshellboots && [quality] == unique # [enhanceddefense] >= 140 # [tier] == 9000                 // Sandstorm Trek (20 frw/20 fhr/10-15 str/10-15 vit/40-70 pr/140-170 ed/rep durability; req [lvl: 64 | str: 91 | dex: 0])
+[name] == battleboots && [quality] == unique && [flag] != ethereal # [itemmagicbonus] >= 30 # [tier] == 10000 // War Traveler (25 frw/30-50 mf/10 str/10 vit/15-25 dmg/150-190 ed; req [lvl: 42 | str: 95 | dex: 0])
+
+// ## Shields ##
+[name] == kiteshield && [quality] == unique && [flag] != ethereal # [toblock] >= 25 && [fireresist] + [coldresist] + [lightresist] + [poisonresist] >= 15 # [tier] == 3000 // Steelclash (+1 pal skills/25% block/20 fbr/15@res/60-100 ed/3 dr/20 def/+3 light radius; req [lvl: 17 | str: 47 | dex: 0])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal # [fireresist] >= 40 && [lightresist] >= 40 && [coldresist] >= 40 # [tier] == 5000                      // Ancient's Pledge paladin shield (48 fr/43 cr/48 lr/48 pr/50 ed/10% dmg to mana; req [lvl: 21+ | str: base | dex: base])
+[name] == gildedshield && [quality] == unique && [flag] != ethereal # [paladinskills] == 2 # [tier] == 6000                                                                // Herald of Zakarum (150-200% ed/30% block/30 fbr/20% ar bonus/+20 str/+20 vit/50@res/+2 pal skills/+2 combat skills; req [lvl: 42 | str: 89 | dex: 0])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal # [maxmana] >= 89 && [fcr] >= 25 # [tier] == 10000                                                      // Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 0+; req [lvl: 25+ | str: base | dex: base])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal # [maxmana] >= 89 && [fcr] >= 25 && [fireresist] >= 5 # [tier] == 13000                                 // Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 5+; req [lvl: 25+ | str: base | dex: base])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal # [maxmana] >= 89 && [fcr] >= 25 && [fireresist] >= 10 # [tier] == 14000                                // Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 10+; req [lvl: 25+ | str: base | dex: base])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal # [maxmana] >= 89 && [fcr] >= 25 && [fireresist] >= 15 # [tier] == 15000                                // Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 15+; req [lvl: 25+ | str: base | dex: base])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal # [maxmana] >= 89 && [fcr] >= 25 && [fireresist] >= 20 # [tier] == 16000                                // Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 20+; req [lvl: 25+ | str: base | dex: base])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal # [maxmana] >= 89 && [fcr] >= 25 && [fireresist] >= 25 # [tier] == 17000                                // Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 25+; req [lvl: 25+ | str: base | dex: base])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal # [maxmana] >= 89 && [fcr] >= 25 && [fireresist] >= 30 # [tier] == 18000                                // Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 30+; req [lvl: 25+ | str: base | dex: base])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal # [maxmana] >= 89 && [fcr] >= 25 && [fireresist] >= 35 # [tier] == 19000                                // Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 35+; req [lvl: 25+ | str: base | dex: base])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal # [maxmana] >= 89 && [fcr] >= 25 && [fireresist] >= 40 # [tier] == 20000                                // Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 40+; req [lvl: 25+ | str: base | dex: base])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal # [maxmana] >= 89 && [fcr] >= 25 && [fireresist] == 45 # [tier] == 25000                                // Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 45; req [lvl: 25+ | str: base | dex: base])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal && [class] == elite # [maxmana] >= 89 && [fcr] >= 25 && [fireresist] >= 5 #  [tier] == 33000            // Elite Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 5+; req [lvl: 25+ | str: base | dex: base])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal && [class] == elite # [maxmana] >= 89 && [fcr] >= 25 && [fireresist] >= 10 # [tier] == 34000            // Elite Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 10+; req [lvl: 25+ | str: base | dex: base])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal && [class] == elite # [maxmana] >= 89 && [fcr] >= 25 && [fireresist] >= 15 # [tier] == 35000            // Elite Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 15+; req [lvl: 25+ | str: base | dex: base])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal && [class] == elite # [maxmana] >= 89 && [fcr] >= 25 && [fireresist] >= 20 # [tier] == 36000            // Elite Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 20+; req [lvl: 25+ | str: base | dex: base])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal && [class] == elite # [maxmana] >= 89 && [fcr] >= 25 && [fireresist] >= 25 # [tier] == 37000            // Elite Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 25+; req [lvl: 25+ | str: base | dex: base])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal && [class] == elite # [maxmana] >= 89 && [fcr] >= 25 && [fireresist] >= 30 # [tier] == 38000            // Elite Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 30+; req [lvl: 25+ | str: base | dex: base])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal && [class] == elite # [maxmana] >= 89 && [fcr] >= 25 && [fireresist] >= 35 # [tier] == 39000            // Elite Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 35+; req [lvl: 25+ | str: base | dex: base])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal && [class] == elite # [maxmana] >= 89 && [fcr] >= 25 && [fireresist] >= 40 # [tier] == 40000            // Elite Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 40+; req [lvl: 25+ | str: base | dex: base])
+[type] == auricshields && [flag] == runeword && [flag] != ethereal && [class] == elite # [maxmana] >= 89 && [fcr] >= 25 && [fireresist] == 45 # [tier] == 45000            // Elite Spirit paladin shield (+2 skills/25-35 fcr/55 fhr/22 vit/89-112 mana/250 def vs missile/3-8 magic absorb/35 cr-lr-pr/base fr 45; req [lvl: 25+ | str: base | dex: base])
+
+// ## Merc Weapon ##
+[type] == polearm && [flag] == runeword # [itemcrushingblow] == 25 && [strength] == 20 && [lifeleech] == 7 # [merctier] == 10000                                                                                // Strength (25 cb/7% ll/20 str/10 vit/2 mana per kill/35 ed; req [lvl: 25+ | str: base | dex: base])
+[type] == polearm && [flag] == runeword && [flag] != ethereal && [name] != battlescythe && [name] != grimscythe && [name] != thresher && [name] != giantthresher # [meditationaura] >= 12 # [merctier] == 21000 // Insight other non-eth (lvl 12-17 med aura/35 fcr/200-260 ed/+9 min dmg/180-250 ar/5-30 fire dmg/75 psn dmg over 5 sec/+1-6 crit strike/+5 all stats/2 mana per kill/23 mf; req [lvl: 27+ | str: base | dex: base])
+[type] == polearm && [flag] == runeword && [flag] == ethereal && [name] != battlescythe && [name] != grimscythe && [name] != thresher && [name] != giantthresher # [meditationaura] >= 12 # [merctier] == 21500 // Insight other eth
+[name] == battlescythe && [flag] == runeword && [flag] != ethereal # [meditationaura] >= 12 # [merctier] == 22000                                                                                               // Insight battle scythe non-eth
+[name] == battlescythe && [flag] == runeword && [flag] == ethereal # [meditationaura] >= 12 # [merctier] == 22500                                                                                               // Insight battle scythe eth
+[name] == grimscythe && [flag] == runeword && [flag] != ethereal # [meditationaura] >= 12 # [merctier] == 23000                                                                                                 // Insight grim scythe non-eth
+[name] == grimscythe && [flag] == runeword && [flag] == ethereal # [meditationaura] >= 12 # [merctier] == 23500                                                                                                 // Insight grim scythe eth
+[name] == thresher && [flag] == runeword && [flag] != ethereal # [meditationaura] >= 12 # [merctier] == 24000                                                                                                   // Insight thresher non-eth
+[name] == thresher && [flag] == runeword && [flag] == ethereal # [meditationaura] >= 12 # [merctier] == 24500                                                                                                   // Insight thresher eth
+[name] == giantthresher && [flag] == runeword && [flag] != ethereal # [meditationaura] >= 12 # [merctier] == 25000                                                                                              // Insight giant thresher non-eth
+[name] == giantthresher && [flag] == runeword && [flag] == ethereal # [meditationaura] >= 12 # [merctier] == 25500                                                                                              // Insight giant thresher eth
+
+// ## Merc Helm ##
+[type] == helm && [flag] == runeword && [class] == normal && [flag] != ethereal # [poisonresist] >= 40 # [merctier] == 20000      // Cure normal non-eth (cleansing aura/40-60 pr/75-100 ed; req [lvl: 35+ | str: base | dex: base])
+[type] == helm && [flag] == runeword && [class] == normal && [flag] == ethereal # [poisonresist] >= 40 # [merctier] == 20500      // Cure normal eth
+[type] == helm && [flag] == runeword && [class] == exceptional && [flag] != ethereal # [poisonresist] >= 40 # [merctier] == 21000 // Cure exceptional non-eth
+[type] == helm && [flag] == runeword && [class] == exceptional && [flag] == ethereal # [poisonresist] >= 40 # [merctier] == 21500 // Cure exceptional eth
+[type] == helm && [flag] == runeword && [class] == elite && [flag] != ethereal # [poisonresist] >= 40 # [merctier] == 22000       // Cure elite non-eth
+[type] == helm && [flag] == runeword && [class] == elite && [flag] == ethereal # [poisonresist] >= 40 # [merctier] == 22500       // Cure elite eth
+
+// ## Merc Armor ##
+[name] == linkedmail && [flag] == runeword && [flag] != ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 30000      // Treachery linked mail non-eth (45 ias/20 fhr/5% ctc lvl 15 fade/25% ctc lvl 15 venom/+2 sin skills/30 cr/50 pr/50 gf; req [lvl: 43+ | str: base | dex: base])
+[name] == tigulatedmail && [flag] == runeword && [flag] != ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 30100   // Treachery tigulated mail non-eth
+[name] == mesharmor && [flag] == runeword && [flag] != ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 30200       // Treachery mesh armor non-eth
+[name] == cuirass && [flag] == runeword && [flag] != ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 30300         // Treachery cuirass non-eth
+[name] == russetarmor && [flag] == runeword && [flag] != ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 30400     // Treachery russet armor non-eth
+[name] == templarcoat && [flag] == runeword && [flag] != ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 30500     // Treachery templar coat non-eth
+[name] == sharktootharmor && [flag] == runeword && [flag] != ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 30600 // Treachery sharktooth armor non-eth
+[name] == mageplate && [flag] == runeword && [flag] != ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 30700       // Treachery mage plate non-eth
+[name] == linkedmail && [flag] == runeword && [flag] == ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 30800      // Treachery linked mail eth
+[name] == tigulatedmail && [flag] == runeword && [flag] == ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 30900   // Treachery tigulated mail eth
+[name] == mesharmor && [flag] == runeword && [flag] == ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 31000       // Treachery mesh armor eth
+[name] == cuirass && [flag] == runeword && [flag] == ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 31100         // Treachery cuirass eth
+[name] == russetarmor && [flag] == runeword && [flag] == ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 31200     // Treachery russet armor eth
+[name] == templarcoat && [flag] == runeword && [flag] == ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 31300     // Treachery templar coat eth
+[name] == sharktootharmor && [flag] == runeword && [flag] == ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 31400 // Treachery sharktooth armor eth
+[name] == mageplate && [flag] == runeword && [flag] == ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 31500       // Treachery mage plate eth
+[name] == wirefleece && [flag] == runeword && [flag] != ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 32000      // Treachery wire fleece non-eth
+[name] == diamondmail && [flag] == runeword && [flag] != ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 32100     // Treachery diamond mail non-eth
+[name] == loricatedmail && [flag] == runeword && [flag] != ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 32200   // Treachery loricated mail non-eth
+[name] == greathauberk && [flag] == runeword && [flag] != ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 32300    // Treachery great hauberk non-eth
+[name] == balrogskin && [flag] == runeword && [flag] != ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 32400      // Treachery balrog skin non-eth
+[name] == archonplate && [flag] == runeword && [flag] != ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 32500     // Treachery archon plate non-eth
+[name] == wirefleece && [flag] == runeword && [flag] == ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 32600      // Treachery wire fleece eth
+[name] == diamondmail && [flag] == runeword && [flag] == ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 32700     // Treachery diamond mail eth
+[name] == loricatedmail && [flag] == runeword && [flag] == ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 32800   // Treachery loricated mail eth
+[name] == greathauberk && [flag] == runeword && [flag] == ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 32900    // Treachery great hauberk eth
+[name] == balrogskin && [flag] == runeword && [flag] == ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 33000      // Treachery balrog skin eth
+[name] == archonplate && [flag] == runeword && [flag] == ethereal # [ias] == 45 && [fhr] == 20 # [merctier] == 33100     // Treachery archon plate eth
