@@ -3,6 +3,7 @@ package step
 import (
 	"errors"
 	"fmt"
+	"math"
 	"sync"
 	"time"
 
@@ -214,7 +215,7 @@ func attack(settings attackSettings) error {
 			continue
 		}
 
-		performAttack(ctx, settings, monster.UnitID, monster.Position.X, monster.Position.Y)
+		performAttack(ctx, settings, monster)
 
 		lastRunAt = time.Now()
 		numOfAttacksRemaining--
@@ -290,7 +291,7 @@ func burstAttack(settings attackSettings) error {
 			continue // Continue loop to re-evaluate conditions after a potential move
 		}
 
-		performAttack(ctx, settings, target.UnitID, target.Position.X, target.Position.Y)
+		performAttack(ctx, settings, target)
 	}
 }
 
@@ -311,8 +312,8 @@ func selectSecondarySkillButton(ctx *context.Status, skillID skill.ID) (game.Mou
 	return button, true
 }
 
-func performAttack(ctx *context.Status, settings attackSettings, targetID data.UnitID, x, y int) {
-	monsterPos := data.Position{X: x, Y: y}
+func performAttack(ctx *context.Status, settings attackSettings, target data.Monster) {
+	monsterPos := target.Position
 	if !ctx.PathFinder.LineOfSight(ctx.Data.PlayerUnit.Position, monsterPos) && !ctx.ForceAttack {
 		return // Skip attack if no line of sight
 	}
@@ -340,12 +341,13 @@ func performAttack(ctx *context.Status, settings attackSettings, targetID data.U
 		if err := ctx.PacketSender.CastSkillAtLocation(monsterPos); err != nil {
 			ctx.Logger.Warn("Failed to cast Blizzard via packet, falling back to mouse", "error", err)
 			// Fall back to regular mouse casting
-			performMouseAttack(ctx, settings, x, y)
+			performMouseAttack(ctx, settings, target)
 		}
 		return
 	}
 
 	// Check if we should use entity-targeted packet casting
+	targetID := target.UnitID
 	if ctx.CharacterCfg.PacketCasting.UseForEntitySkills && ctx.PacketSender != nil && targetID != 0 {
 		// Ensure we have the skill selected
 		if settings.primaryAttack {
@@ -357,7 +359,7 @@ func performAttack(ctx *context.Status, settings attackSettings, targetID data.U
 			castPacket := packet.NewCastSkillEntityLeft(targetID)
 			if err := ctx.PacketSender.SendPacket(castPacket.GetPayload()); err != nil {
 				ctx.Logger.Warn("Failed to cast entity skill via packet (left), falling back to mouse", "error", err)
-				performMouseAttack(ctx, settings, x, y)
+				performMouseAttack(ctx, settings, target)
 			} else {
 				// Respect cast duration to avoid spamming server
 				time.Sleep(ctx.Data.PlayerCastDuration())
@@ -371,7 +373,7 @@ func performAttack(ctx *context.Status, settings attackSettings, targetID data.U
 				castPacket := packet.NewCastSkillEntityLeft(targetID)
 				if err := ctx.PacketSender.SendPacket(castPacket.GetPayload()); err != nil {
 					ctx.Logger.Warn("Failed to cast entity skill via packet (left), falling back to mouse", "error", err)
-					performMouseAttack(ctx, settings, x, y)
+					performMouseAttack(ctx, settings, target)
 				} else {
 					// Respect cast duration to avoid spamming server
 					time.Sleep(ctx.Data.PlayerCastDuration())
@@ -380,7 +382,7 @@ func performAttack(ctx *context.Status, settings attackSettings, targetID data.U
 				castPacket := packet.NewCastSkillEntityRight(targetID)
 				if err := ctx.PacketSender.SendPacket(castPacket.GetPayload()); err != nil {
 					ctx.Logger.Warn("Failed to cast entity skill via packet (right), falling back to mouse", "error", err)
-					performMouseAttack(ctx, settings, x, y)
+					performMouseAttack(ctx, settings, target)
 				} else {
 					// Respect cast duration to avoid spamming server
 					time.Sleep(ctx.Data.PlayerCastDuration())
@@ -391,10 +393,10 @@ func performAttack(ctx *context.Status, settings attackSettings, targetID data.U
 	}
 
 	// Regular mouse-based attack
-	performMouseAttack(ctx, settings, x, y)
+	performMouseAttack(ctx, settings, target)
 }
 
-func performMouseAttack(ctx *context.Status, settings attackSettings, x, y int) {
+func performMouseAttack(ctx *context.Status, settings attackSettings, target data.Monster) {
 	selectedButton := game.RightButton
 	if settings.primaryAttack {
 		selectedButton = game.LeftButton
@@ -410,7 +412,20 @@ func performMouseAttack(ctx *context.Status, settings attackSettings, x, y int) 
 		ctx.HID.KeyDown(ctx.Data.KeyBindings.StandStill)
 	}
 
-	x, y = ctx.PathFinder.GameCoordsToScreenCords(x, y)
+	// Convert monster world coordinates to screen coordinates.
+	x, y := ctx.PathFinder.GameCoordsToScreenCords(target.Position.X, target.Position.Y)
+	// X is already centered; Y maps to the tile, so apply a hitbox offset.
+	// Use PixHeight (originally for overlays like curses) to approximate the hitbox midpoint.
+	if stats, ok := npc.MonStats2ForID(target.Name); ok && stats.PixHeight > 0 {
+		// PixHeight is classic 640x480 sprite pixels drawn in the world.
+		isoRatio := 9.9 / 8.0                                                             // Isometric 2:1 diamond grid adjustment.
+		renderScale := 1.5 / isoRatio                                                     // Scale to our 720p renderer (1.5x).
+		renderScaleMinusPadding := renderScale * 0.9                                      // Overlay has extra padding vs the real hitbox (~10%).
+		offset := int(math.Round(float64(stats.PixHeight) * renderScaleMinusPadding / 2)) // Divide by 2 to take the midpoint.
+		if offset > 0 {
+			y -= offset
+		}
+	}
 	ctx.HID.Click(selectedButton, x, y)
 
 	if settings.shouldStandStill {
