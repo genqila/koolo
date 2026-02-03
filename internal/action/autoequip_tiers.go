@@ -306,13 +306,13 @@ func calculateGeneralScore(itm data.Item) float64 {
 	}
 
 	// Handle sockets - this might be a bad idea becauase we won't properly use the sockets
-	if !itm.IsRuneword && !itm.HasSocketedItems() {
-		if sockets, found := itm.FindStat(stat.NumSockets, 0); found {
-			socketScore := float64(sockets.Value * 1)
-			//ctx.Logger.Debug(fmt.Sprintf("Socket score for %s (%d sockets): %.1f", itm.IdentifiedName, sockets.Value, socketScore))
-			score += socketScore
-		}
-	}
+	//if !itm.IsRuneword && !itm.HasSocketedItems() {
+	//	if sockets, found := itm.FindStat(stat.NumSockets, 0); found {
+	//		socketScore := float64(sockets.Value * 1)
+	//		//ctx.Logger.Debug(fmt.Sprintf("Socket score for %s (%d sockets): %.1f", itm.IdentifiedName, sockets.Value, socketScore))
+	//		score += socketScore
+	//	}
+	//}
 
 	perLevelScore := calculatePerLevelStats(itm)
 	baseStatsScore := calculateBaseStats(itm)
