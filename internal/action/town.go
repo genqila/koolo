@@ -146,6 +146,10 @@ func PreRun(firstRun bool) error {
 	// so we don't carry them out to the next area unnecessarily.
 	Stash(false)
 
+	if ctx.CharacterCfg.Game.Leveling.AutoEquip && isLevelingChar {
+		AutoEquip()
+	}
+
 	if isLevelingChar {
 		OptimizeInventory(item.LocationInventory)
 	}
@@ -248,6 +252,11 @@ func InRunReturnTownRoutine() error {
 	// before leaving town.
 	Stash(false)
 	ctx.PauseIfNotPriority() // Check after post-reroll Stash
+
+	if ctx.CharacterCfg.Game.Leveling.AutoEquip && isLevelingChar {
+		AutoEquip()
+		ctx.PauseIfNotPriority() // Check after AutoEquip
+	}
 
 	if ctx.CharacterCfg.Game.Leveling.EnsurePointsAllocation && isLevelingChar {
 		EnsureStatPoints()
