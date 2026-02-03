@@ -354,6 +354,8 @@ func (s *SinglePlayerSupervisor) Start() error {
 			}
 		}
 
+		action.EnsureRunMode()
+
 		// Context with a timeout for the game itself
 		runCtx := ctx
 		var runCancel context.CancelFunc
