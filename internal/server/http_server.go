@@ -1577,6 +1577,7 @@ func (s *HttpServer) config(w http.ResponseWriter, r *http.Request) {
 		// Debug
 		newConfig.Debug.Log = r.Form.Get("debug_log") == "true"
 		newConfig.Debug.Screenshots = r.Form.Get("debug_screenshots") == "true"
+		newConfig.Debug.OpenOverlayMapOnGameStart = r.Form.Get("debug_open_overlay_map") == "true"
 		// Discord
 		newConfig.Discord.Enabled = r.Form.Get("discord_enabled") == "true"
 		newConfig.Discord.EnableGameCreatedMessages = r.Form.Has("enable_game_created_messages")

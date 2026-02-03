@@ -5,6 +5,7 @@ debug:
   log: true # Prints extra log information
   screenshots: false # Saves screenshots of the game in case of errors
   renderMap: false # Render current map data into 'cg.png' file
+  openOverlayMapOnGameStart: false # Auto-open overlay map when entering a game
 
 logSaveDirectory: logs
 D2LoDPath: 'E:\games\Diablo II' # Path to Diablo II Lord of Destruction 1.13c directory

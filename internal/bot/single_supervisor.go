@@ -311,6 +311,16 @@ func (s *SinglePlayerSupervisor) Start() error {
 			s.bot.ctx.Logger.Warn("Failed to dump armory data", slog.Any("error", err))
 		}
 
+		if config.Koolo.Debug.OpenOverlayMapOnGameStart {
+			automapKB := s.bot.ctx.Data.KeyBindings.Automap
+			if automapKB.Key1[0] != 0 || automapKB.Key2[0] != 0 {
+				s.bot.ctx.HID.PressKeyBinding(automapKB)
+				utils.PingSleep(utils.Light, 50)
+			} else {
+				s.bot.ctx.Logger.Debug("Open overlay map on game start is enabled, but no automap key binding is set")
+			}
+		}
+
 		if s.bot.ctx.Data.IsLevelingCharacter && s.bot.ctx.Data.ActiveWeaponSlot != 0 {
 			for attempt := 0; attempt < 3 && s.bot.ctx.Data.ActiveWeaponSlot != 0; attempt++ {
 				s.bot.ctx.HID.PressKeyBinding(s.bot.ctx.Data.KeyBindings.SwapWeapons)

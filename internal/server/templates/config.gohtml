@@ -423,6 +423,17 @@
                         />
                         Save screenshot on error
                     </label>
+                    <label>
+                        <input
+                                {{ if .Debug.OpenOverlayMapOnGameStart }}
+                                    checked="checked"
+                                {{ end }}
+                                type="checkbox"
+                                name="debug_open_overlay_map"
+                                value="true"
+                        />
+                        Open overlay map on game start
+                    </label>
                 </fieldset>
                 <h4>Discord integration</h4>
                 <div style="display:flex; gap:1rem; align-items:center;">
