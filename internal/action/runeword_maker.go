@@ -55,8 +55,20 @@ func MakeRunewords() error {
 		ctx.Logger.Debug("Runeword recipe is enabled, processing", "recipe", recipe.Name)
 
 		continueProcessing := true
+		skippedBases := make(map[data.UnitID]struct{})
 		for continueProcessing {
-			if baseItem, hasBase := hasBaseForRunewordRecipe(baseItems, recipe); hasBase {
+			candidateBases := baseItems
+			if len(skippedBases) > 0 {
+				filteredBases := make([]data.Item, 0, len(baseItems))
+				for _, base := range baseItems {
+					if _, skip := skippedBases[base.UnitID]; skip {
+						continue
+					}
+					filteredBases = append(filteredBases, base)
+				}
+				candidateBases = filteredBases
+			}
+			if baseItem, hasBase := hasBaseForRunewordRecipe(candidateBases, recipe); hasBase {
 				existingTier, hasExisting := currentRunewordBaseTier(ctx, recipe, baseItem.Type().Name)
 
 				// Check if we should skip this base due to tier upgrade logic
@@ -64,23 +76,23 @@ func MakeRunewords() error {
 				// For non-leveling: only apply if AutoUpgrade is enabled
 				shouldCheckUpgrade := isLevelingChar || cfg.Game.RunewordMaker.AutoUpgrade
 				if shouldCheckUpgrade && hasExisting && (len(recipe.BaseSortOrder) == 0 || baseItem.Desc().Tier() <= existingTier) {
-					ctx.Logger.Debug("Skipping recipe - existing runeword has equal or better tier in same base type",
+					ctx.Logger.Debug("Skipping base - existing runeword has equal or better tier in same base type",
 						"recipe", recipe.Name,
 						"baseType", baseItem.Type().Name,
 						"existingTier", existingTier,
 						"newBaseTier", baseItem.Desc().Tier())
-					continueProcessing = false
+					skippedBases[baseItem.UnitID] = struct{}{}
 					continue
 				}
 
 				// Check if character can wear this item (if OnlyIfWearable is enabled)
 				if cfg.Game.RunewordMaker.OnlyIfWearable && !characterMeetsRequirements(ctx, baseItem) {
-					ctx.Logger.Debug("Skipping recipe - character cannot wear this base item",
+					ctx.Logger.Debug("Skipping base - character cannot wear this base item",
 						"recipe", recipe.Name,
 						"base", baseItem.Name,
 						"requiredStr", baseItem.Desc().RequiredStrength,
 						"requiredDex", baseItem.Desc().RequiredDexterity)
-					continueProcessing = false
+					skippedBases[baseItem.UnitID] = struct{}{}
 					continue
 				}
 
