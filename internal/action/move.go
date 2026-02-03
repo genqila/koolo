@@ -30,7 +30,7 @@ import (
 
 const (
 	maxAreaSyncAttempts   = 10
-	areaSyncDelay         = 100 * time.Millisecond
+	areaSyncDelay         = 200 * time.Millisecond
 	monsterHandleCooldown = 500 * time.Millisecond // Reduced cooldown for more immediate re-engagement
 	lootAfterCombatRadius = 25                     // Define a radius for looting after combat
 )
@@ -91,7 +91,7 @@ func ensureAreaSync(ctx *context.Status, expectedArea area.ID) error {
 	}
 
 	// Wait for area data to sync
-	for attempts := 0; attempts < maxAreaSyncAttempts; attempts++ {
+	for attempts := range maxAreaSyncAttempts {
 		ctx.RefreshGameData()
 
 		// Check for death during area sync
@@ -107,9 +107,10 @@ func ensureAreaSync(ctx *context.Status, expectedArea area.ID) error {
 				// Additional check: ensure we have adjacent level data if this is a cross-area operation
 				// Give it one more refresh cycle to ensure all data is populated
 				if attempts > 0 {
-					time.Sleep(100 * time.Millisecond)
+					time.Sleep(areaSyncDelay + 50*time.Millisecond)
 					ctx.RefreshGameData()
 				}
+
 				return nil
 			}
 		}
