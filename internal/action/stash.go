@@ -278,7 +278,7 @@ func shouldStashIt(i data.Item, firstRun bool) (bool, bool, string, string) {
 
 	// These items should NEVER be stashed, regardless of quest status, pickit rules, or first run.
 	fmt.Printf("DEBUG: Evaluating item '%s' for *absolute* exclusion from stash.\n", i.Name)
-	if i.Name == "horadricstaff" { // This is the simplest way given your logs
+	if strings.EqualFold(string(i.Name), "HoradricStaff") {
 		fmt.Printf("DEBUG: ABSOLUTELY PREVENTING stash for '%s' (Horadric Staff exclusion).\n", i.Name)
 		return false, false, "", "" // Explicitly do NOT stash the Horadric Staff
 	}
@@ -288,8 +288,12 @@ func shouldStashIt(i data.Item, firstRun bool) (bool, bool, string, string) {
 		return false, false, "", ""
 	}
 
-	if _, isLevelingChar := ctx.Char.(context.LevelingCharacter); isLevelingChar && i.IsFromQuest() && i.Name != "HoradricCube" || i.Name == "HoradricStaff" {
-		return false, false, "", ""
+	if _, isLevelingChar := ctx.Char.(context.LevelingCharacter); isLevelingChar && i.IsFromQuest() {
+		if i.Name != "HoradricCube" {
+			if _, canUseSharedStash := sharedStashQuestItems[i.Name]; !canUseSharedStash {
+				return false, false, "", ""
+			}
+		}
 	}
 
 	if firstRun {
