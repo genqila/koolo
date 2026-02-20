@@ -48,16 +48,22 @@ func (a Countess) CheckConditions(parameters *RunParameters) SequencerResult {
 				item.LocationInventory,
 				item.LocationStash,
 				item.LocationSharedStash,
+				item.LocationRunesTab,
 			)
 			for _, itm := range items {
 				if itm.IsRuneword && itm.RunewordName == item.RunewordStealth {
 					return SequencerSkip
 				}
+
+				quantity := 1
+				if itm.Location.LocationType == item.LocationRunesTab && itm.StackedQuantity > 0 {
+					quantity = itm.StackedQuantity
+				}
 				switch string(itm.Name) {
 				case "TalRune":
-					ownedTal++
+					ownedTal += quantity
 				case "EthRune":
-					ownedEth++
+					ownedEth += quantity
 				}
 			}
 			if ownedTal >= 1 && ownedEth >= 1 {
