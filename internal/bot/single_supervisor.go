@@ -313,12 +313,20 @@ func (s *SinglePlayerSupervisor) Start() error {
 		}
 
 		if config.Koolo.Debug.OpenOverlayMapOnGameStart {
-			automapKB := s.bot.ctx.Data.KeyBindings.Automap
-			if automapKB.Key1[0] != 0 || automapKB.Key2[0] != 0 {
-				s.bot.ctx.HID.PressKeyBinding(automapKB)
-				utils.PingSleep(utils.Light, 50)
+			// Wait until loading has fully finished so the automap key press is not lost.
+			s.bot.ctx.WaitForGameToLoad()
+			s.bot.ctx.RefreshGameData()
+
+			if s.bot.ctx.Data.OpenMenus.MapShown {
+				s.bot.ctx.Logger.Debug("Overlay map already open on game start, skipping automap key press")
 			} else {
-				s.bot.ctx.Logger.Debug("Open overlay map on game start is enabled, but no automap key binding is set")
+				automapKB := s.bot.ctx.Data.KeyBindings.Automap
+				if (automapKB.Key1[0] != 0 && automapKB.Key1[0] != 255) || (automapKB.Key2[0] != 0 && automapKB.Key2[0] != 255) {
+					s.bot.ctx.HID.PressKeyBinding(automapKB)
+					utils.PingSleep(utils.Light, 50)
+				} else {
+					s.bot.ctx.Logger.Debug("Open overlay map on game start is enabled, but no automap key binding is set")
+				}
 			}
 		}
 
