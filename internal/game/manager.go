@@ -77,7 +77,7 @@ func (gm *Manager) NewGame() error {
 		return errors.New("character still in a game")
 	}
 
-	for range 30 {
+	for range 40 {
 		if gm.gr.IsInCharacterSelectionScreen() {
 			break
 		} else {
@@ -100,7 +100,7 @@ func (gm *Manager) NewGame() error {
 	utils.Sleep(250)
 	gm.hid.Click(LeftButton, createX, createY)
 
-	for range 12 {
+	for range 40 {
 		if gm.gr.InGame() {
 			return nil
 		}
